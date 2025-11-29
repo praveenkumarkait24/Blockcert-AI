@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BlockCert AI – True Match</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    
+    <style>
+        body {
+            background-color: #0f172a; 
+            background-image: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+            color: #e4e2f0;
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container-broad {
+            max-width: 95vw; 
+            width: 100%;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            height: 100%;
+            color: #ffffff;
+        }
+
+        .form-control, .form-select, input[type="file"] {
+            background-color: #1e293b;
+            border: 1px solid #475569;
+            color: #ff0000;
+            border-radius: 8px;
+            padding: 10px 15px;
+        }
+        .form-control:focus {
+            background-color: #1e293b;
+            border-color: #6366f1;
+            color: #ffffff;
+            box-shadow: 0 0 0 0.25rem rgba(99, 102, 241, 0.25);
+        }
+        .form-control::placeholder{
+            color:rgb(122, 122, 122);
+            opacity:1;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            border: none;
+            padding: 12px 20px;
+            font-weight: 600;
+            border-radius: 8px;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+            color: white;
+            width: 100%;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+            box-shadow: 0 6px 20px rgba(99, 102, 241, 0.6);
+        }
+
+        /* Table Styling */
+        .table { color: #ffffff; }
+        .table thead th {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #38bdf8;
+            background-color: rgba(15, 23, 42, 0.8);
+            border-bottom: 2px solid #334155;
+            border-top: none;
+        }
+        .table tbody td {
+            color: #ffffff !important;
+            border-bottom: 1px solid #334155;
+            background-color: transparent;
+            vertical-align: middle;
+            font-size: 0.95rem;
+        }
+        .table-hover tbody tr:hover td {
+            background-color: rgba(99, 102, 241, 0.15);
+        }
+        
+        .text-light-muted { color: #cbd5e1 !important; }
+
+        h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: -webkit-linear-gradient(0deg, #ffffff, #94a3b8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .text-glow { text-shadow: 0 0 20px rgba(99, 102, 241, 0.6); }
+
+        .result-section strong {
+            display: block;
+            margin-top: 15px;
+            color: #94a3b8;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 0.05em;
+        }
+        .result-data {
+            padding: 12px;
+            background-color: rgba(15, 23, 42, 0.6);
+            border-left: 4px solid #6366f1;
+            margin-top: 5px;
+            border-radius: 4px;
+            font-size: 0.95rem;
+            color: #f1f5f9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container-broad">
+    <h1 class="text-center mb-5 text-white" style="font-weight: 800; letter-spacing: -1px; font-size: 2.5rem;">
+        BlockCert <span style="color: #818cf8;" class="text-glow">AI</span> 
+        <br>
+        <p class="lead fw-light text-secondary mt-3" style="font-size: 1rem; letter-spacing: 0.5px; max-width: 600px; margin: 0 auto;">
+            Built to analyze resumes, detect skill gaps, and rank top talent instantly.
+        </p>
+
+    </h1>
+    
+    <div class="row g-4 justify-content-center">
+        
+        <div class="col-lg-3">
+            <div class="card p-4">
+                <h2>Candidate Portal 🎯</h2>
+
+                <form method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-light-muted">Your Name</label>
+                        <input type="text" class="form-control" name="candidate_name" placeholder="John Doe">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-light-muted">Your Email</label>
+                        <input type="email" class="form-control" name="candidate_email" placeholder="john@example.com">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label small fw-bold text-light-muted">Upload Resume (PDF)</label>
+                        <input type="file" class="form-control" name="resume_pdf" accept="application/pdf" required>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label small fw-bold text-light-muted">Job Description</label>
+                        <textarea class="form-control" name="job_text" rows="5" placeholder="Enter your Job Description"></textarea>
+                    </div>
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Analyze Match</button>
+                    </div>
+                </form>
+
+                <hr class="my-4" style="border-color: #334155;">
+
+                <div class="result-section">
+                    {% if error_message %}
+                        <div class="alert alert-danger bg-danger text-white border-0 py-2 small" role="alert">{{ error_message }}</div>
+                    {% endif %}
+
+                    {% if result %}
+                        <div class="text-center p-3 mb-3" style="background: rgba(99, 102, 241, 0.15); border-radius: 12px; border: 1px solid rgba(99, 102, 241, 0.4);">
+                            <h3 class="mb-0 text-white" style="font-size: 2rem;">True Match: <span style="color: #a5b4fc;">{{ "%.1f"|format(result.match_score) }}%</span></h3>
+                        </div>
+
+                        <strong>Skills Detected</strong>
+                        <div class="result-data" style="border-left-color: #4ade80;">
+                            {% if result.cand_skills %}
+                                <span style="color: #4ade80;">{{ result.cand_skills | join(", ") }}</span>
+                            {% else %}
+                                <span class="text-secondary fst-italic">None detected.</span>
+                            {% endif %}
+                        </div>
+
+                        <strong>Missing Skills</strong>
+                        <div class="result-data" style="border-left-color: #f43f5e;">
+                            {% if result.missing_skills %}
+                                <span style="color: #f43f5e;">{{ result.missing_skills | join(", ") }}</span>
+                            {% else %}
+                                <span class="text-success fw-bold">All skills matched!</span>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9">
+            <div class="card p-0">
+                <div class="p-4 border-bottom border-secondary" style="border-color: #334155 !important;">
+                    <h2>Recruiter Dashboard - Ranked Candidates 🥇</h2>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0 align-middle">
+                        <thead>
+                            <tr>
+                                <th class="ps-4" style="width: 20%;">Candidate</th>
+                                <th style="width: 17%;">Email</th>
+                                <th style="width: 15%;">Role</th>
+                                <th style="width: 15%;">Match Score</th>
+                                <th style="width: 20%;">Missing Skills</th>
+                                <th style="width: 13%;">Resume</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        {% if matches %}
+                            {% for m in matches %}
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="fw-bold fs-5">{{ m.candidate.name if m.candidate else "N/A" }}</div>
+                                    </td>
+                                    <td>
+                                        <div class="text-light-muted">{{ m.candidate.email if m.candidate else "N/A" }}</div>
+                                    </td>
+                                    <td>
+                                        <span class="text-light-muted small">
+                                            {% if m.job and m.job.description %}
+                                                {{ m.job.description[:60] }}... 
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        {% if m.match_score >= 70 %}
+                                            <span class="badge bg-success bg-opacity-100 p-2 fs-6">{{ "%.1f"|format(m.match_score) }}%</span>
+                                        {% elif m.match_score >= 60 %}
+                                            <span class="badge bg-warning text-dark bg-opacity-100 p-2 fs-6">{{ "%.1f"|format(m.match_score) }}%</span>
+                                        {% else %}
+                                            <span class="badge bg-danger bg-opacity-100 p-2 fs-6">{{ "%.1f"|format(m.match_score) }}%</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="small text-white text-wrap">
+                                        {% if m.missing_skills %}
+                                            <span style="color: #fca5a5;">{{ m.missing_skills }}</span>
+                                        {% else %}
+                                            <span style="color: #86efac;">No missing skills</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if m.candidate.resume_data %}
+                                            <a href="{{ url_for('view_resume', candidate_id=m.candidate.id) }}" target="_blank" class="btn btn-sm btn-outline-info text-white">View PDF📄</a>
+                                        {% else %}
+                                            <span class="text-secondary small">N/A</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="6"><div class="text-center p-5 text-light-muted">No candidates yet.</div></td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+    <footer class="text-center text-secondary">
+        Developed by <strong>Team Codezilla</strong>
+    </footer>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
