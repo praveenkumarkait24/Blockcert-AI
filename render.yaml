@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: blockcert-ai
+    runtime: python
+    plan: free
+    buildCommand: pip install --no-cache-dir -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT --timeout 120 --workers 1 --threads 2 --worker-class gthread --max-requests 100 --max-requests-jitter 10
+    envVars:
+      - key: TOKENIZERS_PARALLELISM
+        value: "false"
+      - key: PYTHON_VERSION
+        value: "3.13"
+      - key: TRANSFORMERS_CACHE
+        value: /opt/render/project/.cache
