@@ -1,6 +1,0 @@
-[build]
-builder = "pip"
-pythonVersion = "3.10"
-
-[deploy]
-startCommand = "gunicorn app:app --timeout 200"
