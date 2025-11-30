@@ -9,3 +9,4 @@ numpy==1.26.4
 torch==2.2.1+cpu
 transformers==4.37.2
 tokenizers==0.15.2
+gunicorn
