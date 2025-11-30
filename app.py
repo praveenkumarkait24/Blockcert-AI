@@ -1,9 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, session, send_file
 from sklearn.metrics.pairwise import cosine_similarity
-from sentence_transformers import SentenceTransformer
 import numpy as np
 import os
-import io # Required for handling binary file streams
+import io
+import hashlib
 
 try:
     from pypdf import PdfReader
@@ -16,13 +16,22 @@ from models import Candidate, Job, Match
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 app = Flask(__name__)
-app.secret_key = "super_secret_key_blockcert_ai" 
+app.secret_key = os.environ.get("SECRET_KEY", "super_secret_key_blockcert_ai")
 init_db(app)
 
 with app.app_context():
     db.create_all()
 
-model = SentenceTransformer("sentence-transformers/paraphrase-MiniLM-L3-v2")
+# Lazy load model to reduce startup memory
+_model = None
+
+def get_model():
+    global _model
+    if _model is None:
+        from sentence_transformers import SentenceTransformer
+        # Use smaller model for memory efficiency
+        _model = SentenceTransformer("all-MiniLM-L6-v2")
+    return _model
 
 SKILL_VOCAB = [
     "python", "java", "c", "c++", "c#", "javascript", "typescript",
@@ -39,7 +48,12 @@ SKILL_VOCAB = [
 def embed(text: str) -> np.ndarray:
     if not text:
         return np.zeros((1, 384))
-    return np.array(model.encode([text]))
+    try:
+        model = get_model()
+        return np.array(model.encode([text]))
+    except Exception as e:
+        print(f"Error in embedding: {e}")
+        return np.zeros((1, 384))
 
 def compute_match_score(resume_text: str, job_text: str) -> float:
     e1 = embed(resume_text)
@@ -89,6 +103,10 @@ def view_resume(candidate_id):
         as_attachment=False, # False opens in browser, True downloads
         download_name=f"{candidate.name}_resume.pdf"
     )
+
+@app.route('/health')
+def health_check():
+    return {"status": "ok", "service": "blockcert-ai"}, 200
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -140,9 +158,13 @@ def index():
                 if resume_binary:
                     candidate.resume_data = resume_binary # Update PDF if new one uploaded
             
-            job = Job.query.filter_by(title="Hackathon Job Role").first()
+            # Create unique job based on description hash to avoid reusing same job for all candidates
+            job_hash = hashlib.md5(job_text.encode()).hexdigest()[:8]
+            job_title = f"Job Role - {job_hash}"
+            
+            job = Job.query.filter_by(title=job_title).first()
             if not job:
-                job = Job(title="Hackathon Job Role", description=job_text, skills_required=",".join(job_skills))
+                job = Job(title=job_title, description=job_text, skills_required=",".join(job_skills))
                 db.session.add(job)
             else:
                 job.description = job_text
