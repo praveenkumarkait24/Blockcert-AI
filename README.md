@@ -229,9 +229,11 @@ cd BlockCert-AI
 <hr>
 
 <h2>📜 License</h2>
-<p>MIT License</p>
+<img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="license badge"/>
+
 
 <h2>🙌 Contributions</h2>
 <p>Pull requests are welcome.</p>
+
 
 </div>
