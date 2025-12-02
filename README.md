@@ -222,7 +222,7 @@ cd BlockCert-AI
 
   <tr>
         <td>AI & ML Developer</td>
-        <td>DHANUSH M</td>
+        <td><a href="https://github.com/Dhanu2267" target="_blank">DHANUSH M</a></td>
    </tr>
 </table>
 
